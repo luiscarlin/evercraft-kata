@@ -15,9 +15,12 @@ function App() {
   
   return (
     <div className="App">
-      <input id={'new-character-name'}value={newPlayerName} onChange={(event) => setNewPlayerName(event.target.value)}/>
-      <button id={'button-create-character'} onClick={createPlayer}>Create Character</button>
-      <button id={"show-character-info"} onClick={() => toggleAllExpanded(!allExpanded)}>{allExpanded ? "Hide": "Show"} Character Info</button>
+      <h1>Welcome to Evercraft</h1>
+      <div className={'new-character'}>
+        <input id={'new-character-name'} value={newPlayerName} onChange={(event) => setNewPlayerName(event.target.value)}/>
+        <button id={'button-create-character'} onClick={createPlayer}>Create Character</button>
+        <button id={"show-character-info"} onClick={() => toggleAllExpanded(!allExpanded)}>{allExpanded ? "Hide": "Show"} Character Info</button>
+      </div>
       <div className='characters-container'>
       {
         players.map((player, i) => (<Player {...player} allExpanded={allExpanded}key={i} />))
@@ -30,12 +33,12 @@ function App() {
 const Player = ({name, armor, hp, allExpanded}) => {
   return (
     <div className={'character-card'}>
-      <div id={'character-name'}>Name: {name}</div>
+      <h2 id={'character-name'}>{name}</h2>
       {
         allExpanded &&
         <div>
-          <div id={'character-armor'}>Armor Class: {armor}</div>
-          <div id={'character-hp'}>Hit Points: {hp}</div>
+          <p id={'character-armor'}>Armor Class: {armor}</p>
+          <p id={'character-hp'}>Hit Points: {hp}</p>
         </div>
       }
     </div>

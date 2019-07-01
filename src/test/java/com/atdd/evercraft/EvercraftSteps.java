@@ -18,23 +18,26 @@ public class EvercraftSteps implements En {
 
         After(() -> webDriver.close());
 
-        Given("^I start a new game$", () -> {
-        });
+        And("^there are characters created$", () -> {
+            webDriver.findElement(By.id("new-character-name")).sendKeys("jim");
+            webDriver.findElement(By.id("button-create-character")).click();
 
-        Given("^there are characters selected$", () -> {
+            webDriver.findElement(By.id("new-character-name")).sendKeys("jimenez");
+            webDriver.findElement(By.id("button-create-character")).click();
         });
 
         Given("^I am in the game$", () -> {
         });
 
         When("^I create a character$", () -> {
+            webDriver.findElement(By.id("new-character-name")).sendKeys("bob");
             webDriver.findElement(By.id("button-create-character")).click();
             webDriver.findElement(By.id("character-name")).click();
         });
 
         Then("^my character has default attributes$", () -> {
             String name = webDriver.findElement(By.id("character-name")).getText();
-            Assert.assertTrue("Name not found!", name.contains("stranger"));
+            Assert.assertTrue("Name not found!", name.contains("bob"));
 
             String armor = webDriver.findElement(By.id("character-armor")).getText();
             Assert.assertTrue("Armor not found!", armor.contains("10"));
@@ -42,6 +45,30 @@ public class EvercraftSteps implements En {
             String hp = webDriver.findElement(By.id("character-hp")).getText();
             Assert.assertTrue("Hit Points not found!", hp.contains("5"));
         });
-    }
 
+        When("^I access character info$", () -> {
+            webDriver.findElement(By.id("show-character-info")).click();
+        });
+
+        Then("^I can see details for all characters$", () -> {
+            String name = webDriver.findElement(By.id("character-name-jim")).getText();
+            Assert.assertTrue("Name not found!", name.contains("bob"));
+
+            String armor = webDriver.findElement(By.id("character-armor-jim")).getText();
+            Assert.assertTrue("Armor not found!", armor.contains("10"));
+
+            String hp = webDriver.findElement(By.id("character-hp-jim")).getText();
+            Assert.assertTrue("Hit Points not found!", hp.contains("5"));
+
+            name = webDriver.findElement(By.id("character-name-jimenez")).getText();
+            Assert.assertTrue("Name not found!", name.contains("bob"));
+
+            armor = webDriver.findElement(By.id("character-armor-jimenez")).getText();
+            Assert.assertTrue("Armor not found!", armor.contains("10"));
+
+            hp = webDriver.findElement(By.id("character-hp-jimenez")).getText();
+            Assert.assertTrue("Hit Points not found!", hp.contains("5"));
+        });
+
+    }
 }

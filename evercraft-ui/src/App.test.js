@@ -29,5 +29,20 @@ describe('Evercraft', () => {
         expect(wrapper.find('#character-hp').text()).toBe('Hit Points: 5')
       })
     })
+
+    describe('and second player is created', () => {
+      it('displays their info when they are expanded', () => {
+        wrapper.find('#new-character-name').simulate('change', { target: { value: 'danger' } })
+        wrapper.find('#button-create-character').simulate('click')
+        wrapper.find('#show-character-info').simulate('click')
+
+        expect(wrapper.find('#character-name-stranger').text()).toBe('stranger')
+        expect(wrapper.find('#character-name-danger').text()).toBe('danger')
+        expect(wrapper.find('#character-armor-stranger')).toHaveLength(1)
+        expect(wrapper.find('#character-name-danger')).toHaveLength(1)
+        expect(wrapper.find('#character-hp-stranger')).toHaveLength(1)
+        expect(wrapper.find('#character-hp-danger')).toHaveLength(1)
+      })
+    })
   })
 });

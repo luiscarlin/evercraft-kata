@@ -4,6 +4,7 @@ import './App.css';
 function App() {
   const [players, addPlayer] = useState([])
   const [newPlayerName, setNewPlayerName] = useState('')
+  const [allExpanded, toggleAllExpanded] = useState(false)
 
   function createPlayer() {
     let copyPlayers = [...players]
@@ -16,21 +17,22 @@ function App() {
     <div className="App">
       <input id={'new-character-name'}value={newPlayerName} onChange={(event) => setNewPlayerName(event.target.value)}/>
       <button id={'button-create-character'} onClick={createPlayer}>Create Character</button>
+      <button id={"show-character-info"} onClick={() => toggleAllExpanded(!allExpanded)}>{allExpanded ? "Hide": "Show"} Character Info</button>
+      <div className='characters-container'>
       {
-        players.map((player, i) => (<Player {...player} key={i} />))
+        players.map((player, i) => (<Player {...player} allExpanded={allExpanded}key={i} />))
       }
+      </div>
     </div>
   );
 }
 
-const Player = ({name, armor, hp}) => {
-  const [ expanded, toggle ] = useState(false)
-
+const Player = ({name, armor, hp, allExpanded}) => {
   return (
-    <div onClick={() => toggle(!expanded)}>
+    <div className={'character-card'}>
       <div id={'character-name'}>Name: {name}</div>
       {
-        expanded &&
+        allExpanded &&
         <div>
           <div id={'character-armor'}>Armor Class: {armor}</div>
           <div id={'character-hp'}>Hit Points: {hp}</div>

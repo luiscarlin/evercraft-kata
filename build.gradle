@@ -1,0 +1,81 @@
+import java.time.LocalDateTime
+import java.util.concurrent.Callable
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        compile 'com.sparkjava:spark-core:2.3'
+        compile 'com.fasterxml.jackson.jr:jackson-jr-all:2.9.0'
+        testCompile 'junit:junit:4.12'
+        testCompile 'org.assertj:assertj-core:3.8.0'
+        testCompile 'io.cucumber:cucumber-java8:4.2.0'
+        testCompile 'io.cucumber:cucumber-junit:4.2.0'
+        testCompile 'org.seleniumhq.selenium:selenium-java:2.41.0'
+        testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:2.23.0'
+    }
+    test { finalizedBy jacocoTestReport }
+
+    jar {
+        manifest {
+            attributes(
+                    'Class-Path': configurations.runtimeClasspath.files.collect { it.getAbsolutePath() }.join(' ')
+            )
+        }
+    }
+}
+
+class RunAsyncTask extends DefaultTask {
+    @TaskAction
+    def startAsync() {
+        ExecutorService es = Executors.newCachedThreadPool()
+        es.submit({
+            project.javaexec {
+                classpath = project.sourceSets.main.runtimeClasspath
+                main = "FakeDiceServer"
+            }
+        } as Callable)
+        es.submit({
+            project.javaexec {
+                classpath = project.sourceSets.main.runtimeClasspath
+                main = "EvercraftApp"
+            }
+        } as Callable)
+    }
+}
+
+task serverAsync(type: RunAsyncTask, dependsOn: compileJava) {
+    doLast {
+        println LocalDateTime.now().toString() + 'sleeping'
+        sleep(2 * 1000)
+    }
+}
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testRuntime
+    }
+}
+
+task killJetty(type:Exec) {
+    executable "pkill"
+    args "-lf","Evercraft.*jetty"
+}
+
+task cucumber() {
+    dependsOn assemble, compileTestJava, serverAsync
+    doFirst {
+        javaexec {
+            main = "cucumber.api.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = ['--plugin', 'pretty', '--glue', 'com.atdd.evercraft', 'src/test/resources']
+        }
+    }
+    finalizedBy killJetty
+}

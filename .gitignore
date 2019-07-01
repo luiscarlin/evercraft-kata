@@ -1,0 +1,7 @@
+/out
+/node_modules
+.idea
+/build
+.gradle
+/gradle
+

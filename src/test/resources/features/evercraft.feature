@@ -10,3 +10,8 @@ Feature: Evercraft
     When I access character info
     Then I can see details for all characters
 
+  Scenario: Attack
+    Given I have a target to attack
+    When I successfully attack
+    Then my target is damaged
+

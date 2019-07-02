@@ -14,8 +14,6 @@ html {
   box-sizing: inherit;
 }
 body {
-  /* margin: 0 50rem; */
-  max-width: 1210rem;
   transition: all .7s ease-in-out;
 }
 
@@ -29,6 +27,16 @@ h2 {
   font-size: 3rem;
 }
 p {
+  margin: 0rem;
+  font-size: 2rem;
+}
+
+button {
+  margin: 0rem;
+  font-size: 2rem;
+}
+
+input {
   margin: 0rem;
   font-size: 2rem;
 }

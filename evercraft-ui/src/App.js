@@ -2,45 +2,74 @@ import React, {useState} from 'react';
 import './App.css';
 
 function App() {
-  const [players, addPlayer] = useState([])
-  const [newPlayerName, setNewPlayerName] = useState('')
-  const [allExpanded, toggleAllExpanded] = useState(false)
+  const [attackerName, setAttackerName] = useState('')
+  const [defenderName, setDefenderName] = useState('')
+  const [attacker, setAttacker] = useState(null)
+  const [defender, setDefender] = useState(null)
 
-  function createPlayer() {
-    let copyPlayers = [...players]
-    copyPlayers.push({ name: newPlayerName, armor: 10, hp: 5 })
-    addPlayer(copyPlayers)
-    setNewPlayerName('')
+  function createAttacker() {
+    attackerName.trim()
+
+    if (attackerName !== "") {
+      setAttacker({name: attackerName, armor: 10, hp: 5})
+      setAttackerName('')
+    }
+  }
+
+  function createDefender() {
+    defenderName.trim()
+
+    if (defenderName !== "") {
+      setDefender({name: defenderName, armor: 10, hp: 5})
+      setDefenderName('')
+    }
   }
   
   return (
-    <div className="App">
+    <div className="app">
       <h1>Welcome to Evercraft</h1>
-      <div className={'new-character'}>
-        <input id={'new-character-name'} value={newPlayerName} onChange={(event) => setNewPlayerName(event.target.value)}/>
-        <button id={'button-create-character'} onClick={createPlayer}>Create Character</button>
-        <button id={"show-character-info"} onClick={() => toggleAllExpanded(!allExpanded)}>{allExpanded ? "Hide": "Show"} Character Info</button>
-      </div>
-      <div className='characters-container'>
-      {
-        players.map((player, i) => (<Player {...player} allExpanded={allExpanded}key={i} />))
-      }
+      <div className="versus-container">
+        <div className="attacker">
+          <h2>Attacker</h2>
+          { 
+            attacker 
+            ? <Player {...attacker} type='attacker'/> 
+            : <NewCharacter name={attackerName} setName={setAttackerName} createCharacter={createAttacker} type="attacker"/>
+          }
+        </div>
+        <h1>VS</h1>
+        <div className="defender">
+          <h2>Defender</h2>
+          { 
+            defender 
+            ? <Player {...defender} type='defender'/> 
+            : <NewCharacter name={defenderName} setName={setDefenderName} createCharacter={createDefender} type='defender'/>
+          }
+        </div>
       </div>
     </div>
   );
 }
 
-const Player = ({name, armor, hp, allExpanded}) => {
+const Player = ({name, armor, hp, type}) => {
   return (
     <div className={'character-card'}>
-      <h2 id={'character-name'}>{name}</h2>
-      {
-        allExpanded &&
-        <div>
-          <p id={'character-armor'}>Armor Class: {armor}</p>
-          <p id={'character-hp'}>Hit Points: {hp}</p>
-        </div>
-      }
+      <h2 id={`character-name-${type}`}>{name}</h2>
+      <div>
+        <p id={`character-armor-${type}`}>Armor Class: {armor}</p>
+        <p id={`character-hp-${type}`}>Hit Points: {hp}</p>
+      </div>
+    </div>
+  )
+}
+
+function NewCharacter({name, setName, createCharacter, type}) {
+  return (
+    <div className={'new-character'}>
+      <div className="entry">
+        <input id={`new-character-name-${type}`} value={name} placeholder="Name" onChange={(event) => setName(event.target.value)}/>
+        <button id={`button-create-character-${type}`} onClick={createCharacter}>Create</button>
+      </div>
     </div>
   )
 }

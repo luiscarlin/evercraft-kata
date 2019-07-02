@@ -4,45 +4,63 @@ import App from './App';
 import { mount } from 'enzyme'
 
 describe('Evercraft', () => {
-  describe('when character is created with a name', () => {
-    let wrapper
+  let wrapper
+
+  beforeEach(() => {
+    wrapper = mount(<App />)
+  })
+
+  describe('when attacker is created', () => {
     beforeEach(() => {
+      wrapper.find('#new-character-name-attacker').simulate('change', { target: { value: 'stranger' } })
+      wrapper.find('#button-create-character-attacker').simulate('click')
+    })
+
+    it('displays the character with the provided name', () => {
+      expect(wrapper.find('#character-name-attacker').text()).toBe('stranger')
+    })
+
+    it('displays armor default value', () => {
+      expect(wrapper.find('#character-armor-attacker').text()).toBe('Armor Class: 10')
+    })
+
+    it('displays hp default value', () => {
+      expect(wrapper.find('#character-hp-attacker').text()).toBe('Hit Points: 5')
+    })
+
+    it('does not create character without name', () => {
       wrapper = mount(<App />)
-      wrapper.find('#new-character-name').simulate('change', { target: { value: 'stranger' } })
-      wrapper.find('#button-create-character').simulate('click')
+      wrapper.find('#new-character-name-attacker').simulate('change', { target: { value: '' } })
+      wrapper.find('#button-create-character-attacker').simulate('click')
+  
+      expect(wrapper.find('#character-name-attacker').length).toBe(0)
+    })
+  })
+
+  describe('when defender is created', () => {
+    beforeEach(() => {
+      wrapper.find('#new-character-name-defender').simulate('change', { target: { value: 'danger' } })
+      wrapper.find('#button-create-character-defender').simulate('click')
     })
 
-    it('displays the provided name', () => {
-      expect(wrapper.find('#character-name').text()).toBe('Name: stranger')
+    it('displays the character with the provided name', () => {
+      expect(wrapper.find('#character-name-defender').text()).toBe('danger')
     })
 
-    describe('and is expanded', () => {
-      beforeEach(() => {
-        wrapper.find('#character-name').simulate('click')
-      })
-
-      it('displays armor default value', () => {
-        expect(wrapper.find('#character-armor').text()).toBe('Armor Class: 10')
-      })
-
-      it('displays hp default value', () => {
-        expect(wrapper.find('#character-hp').text()).toBe('Hit Points: 5')
-      })
+    it('displays armor default value', () => {
+      expect(wrapper.find('#character-armor-defender').text()).toBe('Armor Class: 10')
     })
 
-    describe('and second player is created', () => {
-      it('displays their info when they are expanded', () => {
-        wrapper.find('#new-character-name').simulate('change', { target: { value: 'danger' } })
-        wrapper.find('#button-create-character').simulate('click')
-        wrapper.find('#show-character-info').simulate('click')
+    it('displays hp default value', () => {
+      expect(wrapper.find('#character-hp-defender').text()).toBe('Hit Points: 5')
+    })
 
-        expect(wrapper.find('#character-name-stranger').text()).toBe('stranger')
-        expect(wrapper.find('#character-name-danger').text()).toBe('danger')
-        expect(wrapper.find('#character-armor-stranger')).toHaveLength(1)
-        expect(wrapper.find('#character-name-danger')).toHaveLength(1)
-        expect(wrapper.find('#character-hp-stranger')).toHaveLength(1)
-        expect(wrapper.find('#character-hp-danger')).toHaveLength(1)
-      })
+    it('does not create character without name', () => {
+      wrapper = mount(<App />)
+      wrapper.find('#new-character-name-defender').simulate('change', { target: { value: '' } })
+      wrapper.find('#button-create-character-defender').simulate('click')
+  
+      expect(wrapper.find('#character-name-defender').length).toBe(0)
     })
   })
 });

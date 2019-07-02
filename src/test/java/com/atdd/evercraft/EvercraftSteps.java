@@ -19,54 +19,52 @@ public class EvercraftSteps implements En {
         After(() -> webDriver.close());
 
         And("^there are characters created$", () -> {
-            webDriver.findElement(By.id("new-character-name")).sendKeys("jim");
-            webDriver.findElement(By.id("button-create-character")).click();
+            webDriver.findElement(By.id("new-character-name-attacker")).sendKeys("jim");
+            webDriver.findElement(By.id("button-create-character-attacker")).click();
 
-            webDriver.findElement(By.id("new-character-name")).sendKeys("jimenez");
-            webDriver.findElement(By.id("button-create-character")).click();
+            webDriver.findElement(By.id("new-character-name-defender")).sendKeys("jimenez");
+            webDriver.findElement(By.id("button-create-character-defender")).click();
         });
 
         Given("^I am in the game$", () -> {
         });
 
         When("^I create a character$", () -> {
-            webDriver.findElement(By.id("new-character-name")).sendKeys("bob");
-            webDriver.findElement(By.id("button-create-character")).click();
-            webDriver.findElement(By.id("character-name")).click();
+            webDriver.findElement(By.id("new-character-name-attacker")).sendKeys("bob");
+            webDriver.findElement(By.id("button-create-character-attacker")).click();
         });
 
         Then("^my character has default attributes$", () -> {
-            String name = webDriver.findElement(By.id("character-name")).getText();
+            String name = webDriver.findElement(By.id("character-name-attacker")).getText();
             Assert.assertTrue("Name not found!", name.contains("bob"));
 
-            String armor = webDriver.findElement(By.id("character-armor")).getText();
+            String armor = webDriver.findElement(By.id("character-armor-attacker")).getText();
             Assert.assertTrue("Armor not found!", armor.contains("10"));
 
-            String hp = webDriver.findElement(By.id("character-hp")).getText();
+            String hp = webDriver.findElement(By.id("character-hp-attacker")).getText();
             Assert.assertTrue("Hit Points not found!", hp.contains("5"));
         });
 
         When("^I access character info$", () -> {
-            webDriver.findElement(By.id("show-character-info")).click();
         });
 
         Then("^I can see details for all characters$", () -> {
-            String name = webDriver.findElement(By.id("character-name-jim")).getText();
-            Assert.assertTrue("Name not found!", name.contains("bob"));
+            String name = webDriver.findElement(By.id("character-name-attacker")).getText();
+            Assert.assertTrue("Name not found!", name.contains("jim"));
 
-            String armor = webDriver.findElement(By.id("character-armor-jim")).getText();
+            String armor = webDriver.findElement(By.id("character-armor-attacker")).getText();
             Assert.assertTrue("Armor not found!", armor.contains("10"));
 
-            String hp = webDriver.findElement(By.id("character-hp-jim")).getText();
+            String hp = webDriver.findElement(By.id("character-hp-attacker")).getText();
             Assert.assertTrue("Hit Points not found!", hp.contains("5"));
 
-            name = webDriver.findElement(By.id("character-name-jimenez")).getText();
-            Assert.assertTrue("Name not found!", name.contains("bob"));
+            name = webDriver.findElement(By.id("character-name-defender")).getText();
+            Assert.assertTrue("Name not found!", name.contains("jimenez"));
 
-            armor = webDriver.findElement(By.id("character-armor-jimenez")).getText();
+            armor = webDriver.findElement(By.id("character-armor-defender")).getText();
             Assert.assertTrue("Armor not found!", armor.contains("10"));
 
-            hp = webDriver.findElement(By.id("character-hp-jimenez")).getText();
+            hp = webDriver.findElement(By.id("character-hp-defender")).getText();
             Assert.assertTrue("Hit Points not found!", hp.contains("5"));
         });
 
